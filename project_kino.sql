@@ -126,7 +126,7 @@ INSERT INTO Genre (Name_genre, Period) VALUES
 ('Romance', 'Classic'),
 ('Historical', 'Timeless');
 
--- Actors (removed Woody Harrelson)
+-- Actors
 INSERT INTO Actor (Name_actor, First_name_actor, Birth_date_actor, Nationality_actor) VALUES
 ('DiCaprio', 'Leonardo', '1974-11-11', 'American'),
 ('Hanks', 'Tom', '1956-07-09', 'American'),
@@ -148,7 +148,7 @@ INSERT INTO Actor (Name_actor, First_name_actor, Birth_date_actor, Nationality_a
 ('Oldman', 'Gary', '1958-03-21', 'British'),
 ('Brolin', 'Josh', '1968-02-12', 'American');
 
--- Films (added new titles and replaced Godfather/Lord of the Rings with Oppenheimer)
+-- Films 
 INSERT INTO Film (Title, Release_year, Duration, Synopsis, director_id) VALUES
 ('Avatar', 2009, 162, 'A paraplegic marine dispatched to the moon Pandora becomes torn between following orders and protecting the world he feels is his home.', 1),
 ('Inception', 2010, 148, 'A thief who steals corporate secrets through dream-sharing technology is tasked with planting an idea into a CEO’s mind.', 2),
@@ -162,7 +162,7 @@ INSERT INTO Film (Title, Release_year, Duration, Synopsis, director_id) VALUES
 ('The Shining', 1980, 146, 'A man descends into madness while caring for an isolated hotel.', 6),
 ('Oppenheimer', 2023, 180, 'The story of J. Robert Oppenheimer, who led the creation of the atomic bomb.', 2);
 
--- Define (film-genre links)
+-- Define 
 INSERT INTO Define (film_id, genre_id) VALUES
 (1, 1), (1, 4),
 (2, 1), (2, 9),
@@ -176,7 +176,7 @@ INSERT INTO Define (film_id, genre_id) VALUES
 (10, 8), (10, 9),
 (11, 12), (11, 3), (11, 9);
 
--- Play (films and actors — updated to reflect reality)
+-- Play 
 INSERT INTO Play (ID_film, actor_id, Character_name) VALUES
 (1, 4, 'Jake Sully'),
 (2, 1, 'Dom Cobb'),
