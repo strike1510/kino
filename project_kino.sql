@@ -1,6 +1,8 @@
--- Security if tables already exist --
+-- Créer et sélectionner la base de données
+CREATE DATABASE IF NOT EXISTS cinema_db;
+USE cinema_db;
 
-DROP TABLE IF EXISTS Watch;
+-- Security if tables already exist --
 DROP TABLE IF EXISTS Review;
 DROP TABLE IF EXISTS Play;
 DROP TABLE IF EXISTS Define;
@@ -86,14 +88,7 @@ CREATE TABLE Play(
    FOREIGN KEY(ID_film) REFERENCES Film(ID_film),
    FOREIGN KEY(actor_id) REFERENCES Actor(ID_actor)
 );
-CREATE TABLE Watch(
-   ID_film INT,
-   ID_spectator INT,
-   Watch_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-   PRIMARY KEY(ID_film, ID_spectator),
-   FOREIGN KEY(ID_film) REFERENCES Film(ID_film),
-   FOREIGN KEY(ID_spectator) REFERENCES Spectator(ID_spectator)
-);
+
 
 
 -- Directors
@@ -126,7 +121,7 @@ INSERT INTO Genre (Name_genre, Period) VALUES
 ('Romance', 'Classic'),
 ('Historical', 'Timeless');
 
--- Actors
+-- Actors (removed Woody Harrelson)
 INSERT INTO Actor (Name_actor, First_name_actor, Birth_date_actor, Nationality_actor) VALUES
 ('DiCaprio', 'Leonardo', '1974-11-11', 'American'),
 ('Hanks', 'Tom', '1956-07-09', 'American'),
@@ -148,7 +143,7 @@ INSERT INTO Actor (Name_actor, First_name_actor, Birth_date_actor, Nationality_a
 ('Oldman', 'Gary', '1958-03-21', 'British'),
 ('Brolin', 'Josh', '1968-02-12', 'American');
 
--- Films 
+-- Films (added new titles and replaced Godfather/Lord of the Rings with Oppenheimer)
 INSERT INTO Film (Title, Release_year, Duration, Synopsis, director_id) VALUES
 ('Avatar', 2009, 162, 'A paraplegic marine dispatched to the moon Pandora becomes torn between following orders and protecting the world he feels is his home.', 1),
 ('Inception', 2010, 148, 'A thief who steals corporate secrets through dream-sharing technology is tasked with planting an idea into a CEO’s mind.', 2),
@@ -162,7 +157,7 @@ INSERT INTO Film (Title, Release_year, Duration, Synopsis, director_id) VALUES
 ('The Shining', 1980, 146, 'A man descends into madness while caring for an isolated hotel.', 6),
 ('Oppenheimer', 2023, 180, 'The story of J. Robert Oppenheimer, who led the creation of the atomic bomb.', 2);
 
--- Define 
+-- Define (film-genre links)
 INSERT INTO Define (film_id, genre_id) VALUES
 (1, 1), (1, 4),
 (2, 1), (2, 9),
@@ -176,7 +171,7 @@ INSERT INTO Define (film_id, genre_id) VALUES
 (10, 8), (10, 9),
 (11, 12), (11, 3), (11, 9);
 
--- Play 
+-- Play (films and actors — updated to reflect reality)
 INSERT INTO Play (ID_film, actor_id, Character_name) VALUES
 (1, 4, 'Jake Sully'),
 (2, 1, 'Dom Cobb'),
@@ -233,21 +228,6 @@ INSERT INTO Review (Rating, Comment, user_id, film_id) VALUES
 (5, 'Cillian Murphy delivers an Oscar-worthy performance.', 10, 11),
 (4, 'The direction is phenomenal.', 11, 3);
 
--- Watch
-INSERT INTO Watch (ID_film, ID_spectator, Watch_date) VALUES
-(1, 1, '2024-01-15'),
-(2, 2, '2024-02-20'),
-(3, 1, '2024-03-10'),
-(4, 3, '2024-04-12'),
-(5, 4, '2024-05-03'),
-(6, 5, '2024-05-10'),
-(7, 6, '2024-06-01'),
-(8, 7, '2024-06-15'),
-(9, 8, '2024-07-02'),
-(10, 9, '2024-07-21'),
-(11, 10, '2024-08-09'),
-(2, 11, '2024-09-14');
-
 -- CRUD --
 
 -- CREATE
@@ -282,11 +262,10 @@ LEFT JOIN Film f ON d.ID_director = f.director_id
 GROUP BY d.Name_director
 HAVING Nb_Films > 0;
 
--- Spectator Activity
-SELECT s.Username, COUNT(r.ID_review) AS Nb_Avis, COUNT(w.ID_film) AS Nb_Films_Vus
+-- Spectator Activity (modifiée pour enlever la référence à Watch)
+SELECT s.Username, COUNT(r.ID_review) AS Nb_Avis
 FROM Spectator s
 LEFT JOIN Review r ON s.ID_spectator = r.user_id
-LEFT JOIN Watch w ON s.ID_spectator = w.ID_spectator
 GROUP BY s.Username;
 
 -- Films with Principal Actors
