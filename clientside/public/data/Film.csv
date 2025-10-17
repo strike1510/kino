@@ -1,0 +1,13 @@
+ID_film,Title,Release_year,Duration,Synopsis,Average_rating,director_id
+1,Avatar,2009,162,A paraplegic marine dispatched to the moon Pandora becomes torn between following orders and protecting the world he feels is his home.,0,1
+2,Inception,2010,148,A thief who steals corporate secrets through dream-sharing technology is tasked with planting an idea into a CEO's mind.,0,2
+3,The Dark Knight,2008,152,Batman faces the Joker in a battle of chaos and morality.,0,2
+4,Forrest Gump,1994,142,A simple man witnesses key moments of American history with kindness and innocence.,0,3
+5,Pulp Fiction,1994,154,The lives of criminals intertwine in a web of violence and redemption.,0,4
+6,Inglourious Basterds,2009,153,A group of Jewish soldiers plot to assassinate Nazi leaders during World War II.,0,4
+7,Shutter Island,2010,138,Two U.S. marshals investigate a disappearance at a psychiatric hospital.,0,5
+8,Fight Club,1999,139,An office worker and a soap maker form an underground fight club.,0,7
+9,Se7en,1995,127,Two detectives hunt a serial killer who uses the seven deadly sins as his motive.,0,7
+10,The Shining,1980,146,A man descends into madness while caring for an isolated hotel.,0,6
+11,Oppenheimer,2023,180,The story of J. Robert Oppenheimer, who led the creation of the atomic bomb.,9.0,2
+12,Dune: Part Two,2024,166,Paul Atreides unites with the Fremen to avenge his family and save Arrakis.,0,9
