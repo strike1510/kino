@@ -1,0 +1,125 @@
+.main-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.main-page h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.project-description {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.project-description p {
+    color: #495057;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0;
+    text-align: left;
+}
+
+.navigation-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #2c3e50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    min-width: 150px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+}
+
+.nav-link:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    border-color: #007bff;
+}
+
+.nav-link .icon {
+    font-size: 2.5rem;
+}
+
+.nav-link .text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.authors {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #dee2e6;
+}
+
+.authors p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .main-page {
+        padding: 20px 15px;
+    }
+    
+    .main-page h1 {
+        font-size: 2rem;
+    }
+    
+    .navigation-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-link {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .project-description {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-page h1 {
+        font-size: 1.7rem;
+    }
+    
+    .project-description p {
+        font-size: 1rem;
+    }
+    
+    .nav-link {
+        padding: 20px;
+    }
+}

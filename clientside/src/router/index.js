@@ -4,7 +4,13 @@ import HomeView from '../views/HomeView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'main',
+    // Main page is handled directly in App.vue
+    component: { template: '<div></div>' }
+  },
+  {
+    path: '/cinema',
+    name: 'cinema',
     component: HomeView
   },
   {
