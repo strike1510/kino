@@ -1,6 +1,5 @@
 <template>
   <div class="main-view">
-    <!-- Main page content is handled in App.vue -->
   </div>
 </template>
 
@@ -11,5 +10,4 @@ export default {
 </script>
 
 <style scoped>
-/* Styles handled in App.vue */
 </style>

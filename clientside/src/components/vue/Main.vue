@@ -7,10 +7,10 @@
     </div>
 
     <div class="navigation-links">
-      <router-link to="/cinema" class="nav-link">
-        <span class="text">Cinema Database</span>
-      </router-link>
-      
+    <router-link to="/home" class="nav-link">
+      <span class="text">Cinema</span>
+    </router-link>
+    
       <router-link to="/about" class="nav-link">
         <span class="text">About Project</span>
       </router-link>

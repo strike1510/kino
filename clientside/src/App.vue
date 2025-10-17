@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <!-- Main Landing Page -->
     <MainPage v-if="$route.path === '/'" />
     
-    <!-- Page Navigation (for other pages) -->
     <nav v-else class="page-nav">
       <router-link to="/">Main</router-link>
       <router-link to="/cinema">Cinema</router-link>
