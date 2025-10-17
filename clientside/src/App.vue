@@ -2,7 +2,8 @@
   <nav>
     <router-link to="/">Cinema</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/review">Review</router-link>
+    <router-link to="/review">Review</router-link> |
+    <router-link to="/film">Film</router-link>
   </nav>
   <router-view/>
 </template>
