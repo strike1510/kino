@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ReviewPage from '@/components/ReviewPage.vue'
+import ReviewPage from '@/components/vue/review.vue'
 
 export default {
   name: 'ReviewView',

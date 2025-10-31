@@ -1,14 +1,14 @@
 <template>
-  <div class="home">
+  <div class="film">
     <HelloWorld />
   </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/vue/home.vue'
+import HelloWorld from '@/components/vue/film.vue'
 
 export default {
-  name: 'HomeView',
+  name: 'FilmView',
   components: {
     HelloWorld
   }
