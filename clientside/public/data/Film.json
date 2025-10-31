@@ -1,0 +1,110 @@
+[
+  {
+    "ID_film": 1,
+    "Title": "Avatar",
+    "Release_year": 2009,
+    "Duration": 162,
+    "Synopsis": "A paraplegic marine dispatched to the moon Pandora becomes torn between following orders and protecting the world he feels is his home.",
+    "Average_rating": 0.0,
+    "director_id": 1
+  },
+  {
+    "ID_film": 2,
+    "Title": "Inception",
+    "Release_year": 2010,
+    "Duration": 148,
+    "Synopsis": "A thief who steals corporate secrets through dream-sharing technology is tasked with planting an idea into a CEO's mind.",
+    "Average_rating": 0.0,
+    "director_id": 2
+  },
+  {
+    "ID_film": 3,
+    "Title": "The Dark Knight",
+    "Release_year": 2008,
+    "Duration": 152,
+    "Synopsis": "Batman faces the Joker in a battle of chaos and morality.",
+    "Average_rating": 0.0,
+    "director_id": 2
+  },
+  {
+    "ID_film": 4,
+    "Title": "Forrest Gump",
+    "Release_year": 1994,
+    "Duration": 142,
+    "Synopsis": "A simple man witnesses key moments of American history with kindness and innocence.",
+    "Average_rating": 0.0,
+    "director_id": 3
+  },
+  {
+    "ID_film": 5,
+    "Title": "Pulp Fiction",
+    "Release_year": 1994,
+    "Duration": 154,
+    "Synopsis": "The lives of criminals intertwine in a web of violence and redemption.",
+    "Average_rating": 0.0,
+    "director_id": 4
+  },
+  {
+    "ID_film": 6,
+    "Title": "Inglourious Basterds",
+    "Release_year": 2009,
+    "Duration": 153,
+    "Synopsis": "A group of Jewish soldiers plot to assassinate Nazi leaders during World War II.",
+    "Average_rating": 0.0,
+    "director_id": 4
+  },
+  {
+    "ID_film": 7,
+    "Title": "Shutter Island",
+    "Release_year": 2010,
+    "Duration": 138,
+    "Synopsis": "Two U.S. marshals investigate a disappearance at a psychiatric hospital.",
+    "Average_rating": 0.0,
+    "director_id": 5
+  },
+  {
+    "ID_film": 8,
+    "Title": "Fight Club",
+    "Release_year": 1999,
+    "Duration": 139,
+    "Synopsis": "An office worker and a soap maker form an underground fight club.",
+    "Average_rating": 0.0,
+    "director_id": 7
+  },
+  {
+    "ID_film": 9,
+    "Title": "Se7en",
+    "Release_year": 1995,
+    "Duration": 127,
+    "Synopsis": "Two detectives hunt a serial killer who uses the seven deadly sins as his motive.",
+    "Average_rating": 0.0,
+    "director_id": 7
+  },
+  {
+    "ID_film": 10,
+    "Title": "The Shining",
+    "Release_year": 1980,
+    "Duration": 146,
+    "Synopsis": "A man descends into madness while caring for an isolated hotel.",
+    "Average_rating": 0.0,
+    "director_id": 6
+  },
+  {
+    "ID_film": 11,
+    "Title": "Oppenheimer",
+    "Release_year": 2023,
+    "Duration": 180,
+    "Synopsis": "The story of J. Robert Oppenheimer, who led the creation of the atomic bomb.",
+    "Average_rating": 9.0,
+    "director_id": 2
+  },
+  {
+    "ID_film": 12,
+    "Title": "Dune: Part Two",
+    "Release_year": 2024,
+    "Duration": 166,
+    "Synopsis": "Paul Atreides unites with the Fremen to avenge his family and save Arrakis.",
+    "Average_rating": 0.0,
+    "director_id": 9
+  }
+]

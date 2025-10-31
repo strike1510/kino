@@ -1,0 +1,62 @@
+[
+  {
+    "ID_genre": 1,
+    "Name_genre": "Science Fiction",
+    "Period": "Modern"
+  },
+  {
+    "ID_genre": 2,
+    "Name_genre": "Action",
+    "Period": "Contemporary"
+  },
+  {
+    "ID_genre": 3,
+    "Name_genre": "Drama",
+    "Period": "Classic"
+  },
+  {
+    "ID_genre": 4,
+    "Name_genre": "Adventure",
+    "Period": "Timeless"
+  },
+  {
+    "ID_genre": 5,
+    "Name_genre": "Fantasy",
+    "Period": "Modern"
+  },
+  {
+    "ID_genre": 6,
+    "Name_genre": "Thriller",
+    "Period": "Contemporary"
+  },
+  {
+    "ID_genre": 7,
+    "Name_genre": "Crime",
+    "Period": "Contemporary"
+  },
+  {
+    "ID_genre": 8,
+    "Name_genre": "Mystery",
+    "Period": "Classic"
+  },
+  {
+    "ID_genre": 9,
+    "Name_genre": "Psychological",
+    "Period": "Modern"
+  },
+  {
+    "ID_genre": 10,
+    "Name_genre": "Comedy",
+    "Period": "Contemporary"
+  },
+  {
+    "ID_genre": 11,
+    "Name_genre": "Romance",
+    "Period": "Classic"
+  },
+  {
+    "ID_genre": 12,
+    "Name_genre": "Historical",
+    "Period": "Timeless"
+  }
+]

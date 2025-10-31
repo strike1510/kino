@@ -109,46 +109,26 @@ export default {
       this.error = null
       
       try {
-        const response = await fetch(`/data/${this.selectedTable}.csv`)
+        const response = await fetch(`/data/${this.selectedTable}.json`)
         
         if (!response.ok) {
-          throw new Error(`Fichier ${this.selectedTable}.csv non trouvé`)
+          throw new Error(`Fichier ${this.selectedTable}.json non trouvé`)
         }
         
-        const csvText = await response.text()
-        this.tableData = this.parseCSV(csvText)
+        this.tableData = await response.json()
         this.resetForm()
         
         if (this.tableData.length === 0) {
-          this.error = 'Aucune donnée trouvée dans le fichier CSV'
+          this.error = 'Aucune donnée trouvée dans le fichier JSON'
         }
         
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error)
-        this.error = `Erreur: ${error.message}. Assurez-vous que le fichier ${this.selectedTable}.csv existe dans le dossier public/data/`
+        this.error = `Erreur: ${error.message}. Assurez-vous que le fichier ${this.selectedTable}.json existe dans le dossier public/data/`
         this.tableData = []
       } finally {
         this.loading = false
       }
-    },
-
-    parseCSV(csvText) {
-      const lines = csvText.split('\n').filter(line => line.trim() !== '')
-      
-      if (lines.length === 0) return []
-      
-      const headers = lines[0].split(',').map(header => header.trim())
-      
-      return lines.slice(1).map((line, index) => {
-        const values = line.split(',').map(value => value.trim())
-        const row = {}
-        
-        headers.forEach((header, i) => {
-          row[header] = values[i] !== undefined ? values[i] : ''
-        })
-        
-        return row
-      })
     },
 
     getInputType(column) {
