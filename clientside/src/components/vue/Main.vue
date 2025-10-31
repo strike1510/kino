@@ -8,7 +8,7 @@
 
     <div class="navigation-links">
     <router-link to="/home" class="nav-link">
-      <span class="text">Cinema</span>
+      <span class="text">Home</span>
     </router-link>
     
       <router-link to="/about" class="nav-link">
