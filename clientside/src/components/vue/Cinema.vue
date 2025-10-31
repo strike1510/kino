@@ -112,24 +112,24 @@ export default {
         const response = await fetch(`/data/${this.selectedTable}.json`)
         
         if (!response.ok) {
-          throw new Error(`Fichier ${this.selectedTable}.json non trouvé`)
+          throw new Error(`File ${this.selectedTable}.json not found`)
         }
         
         this.tableData = await response.json()
         this.resetForm()
         
         if (this.tableData.length === 0) {
-          this.error = 'Aucune donnée trouvée dans le fichier JSON'
+          this.error = 'No data found in JSON file'
         }
         
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error)
-        this.error = `Erreur: ${error.message}. Assurez-vous que le fichier ${this.selectedTable}.json existe dans le dossier public/data/`
+            } catch (error) {
+        console.error('Error loading data:', error)
+        this.error = `Error: ${error.message}. Ensure the file ${this.selectedTable}.json exists in the public/data/ folder`
         this.tableData = []
-      } finally {
+            } finally {
         this.loading = false
-      }
-    },
+            }
+          },
 
     getInputType(column) {
       const lowerColumn = column.toLowerCase()
@@ -189,7 +189,7 @@ export default {
     },
 
     deleteRow(id) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer cet enregistrement ?')) {
+      if (confirm('Are you sure you want to delete this record?')) {
         this.tableData = this.tableData.filter(row => row[this.primaryKey] !== id)
       }
     },
