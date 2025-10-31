@@ -4,7 +4,7 @@
     
     <nav v-else class="page-nav">
       <router-link to="/">Main</router-link>
-      <router-link to="/home">Home</router-link>
+      <router-link to="/cinema">Cinema Database</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/review">Review</router-link>
     </nav>

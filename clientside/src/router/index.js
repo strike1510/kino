@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
@@ -11,7 +10,7 @@ const routes = [
   {
     path: '/cinema',
     name: 'cinema',
-    component: HomeView
+    component: () => import('../views/CinemaView.vue')
   },
   {
     path: '/about',
