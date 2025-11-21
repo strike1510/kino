@@ -1,0 +1,86 @@
+[
+  {
+    "ID_director": 1,
+    "Name_director": "Cameron",
+    "First_name_director": "James",
+    "Birth_date_director": "1954-08-16",
+    "Nationality_director": "Canadian"
+  },
+  {
+    "ID_director": 2,
+    "Name_director": "Nolan",
+    "First_name_director": "Christopher",
+    "Birth_date_director": "1970-07-30",
+    "Nationality_director": "British"
+  },
+  {
+    "ID_director": 3,
+    "Name_director": "Spielberg",
+    "First_name_director": "Steven",
+    "Birth_date_director": "1946-12-18",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 4,
+    "Name_director": "Tarantino",
+    "First_name_director": "Quentin",
+    "Birth_date_director": "1963-03-27",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 5,
+    "Name_director": "Scorsese",
+    "First_name_director": "Martin",
+    "Birth_date_director": "1942-11-17",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 6,
+    "Name_director": "Kubrick",
+    "First_name_director": "Stanley",
+    "Birth_date_director": "1928-07-26",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 7,
+    "Name_director": "Fincher",
+    "First_name_director": "David",
+    "Birth_date_director": "1962-08-28",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 8,
+    "Name_director": "Coppola",
+    "First_name_director": "Francis Ford",
+    "Birth_date_director": "1939-04-07",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 9,
+    "Name_director": "Villeneuve",
+    "First_name_director": "Denis",
+    "Birth_date_director": "1967-10-03",
+    "Nationality_director": "Canadian"
+  },
+  {
+    "ID_director": 10,
+    "Name_director": "Scott",
+    "First_name_director": "Ridley",
+    "Birth_date_director": "1937-11-30",
+    "Nationality_director": "British"
+  },
+  {
+    "ID_director": 11,
+    "Name_director": "Zemeckis",
+    "First_name_director": "Robert",
+    "Birth_date_director": "1952-05-14",
+    "Nationality_director": "American"
+  },
+  {
+    "ID_director": 12,
+    "Name_director": "Anderson",
+    "First_name_director": "Wes",
+    "Birth_date_director": "1969-05-01",
+    "Nationality_director": "American"
+  }
+]
