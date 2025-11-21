@@ -11,8 +11,6 @@
         <option value="Spectator">Spectators</option>
         <option value="Review">Rate</option>
         <option value="Genre">Genres</option>
-        <option value="Define">Genres of Films</option>
-        <option value="Play">Acteurs of Films</option>
       </select>
     </div>
 

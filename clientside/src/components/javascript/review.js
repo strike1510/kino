@@ -46,17 +46,17 @@ export default {
     methods: {
         async loadData() {
             try {
-                const reviewsResponse = await fetch('/data/Review.csv')
-                const reviewsText = await reviewsResponse.text()
-                this.reviews = this.parseCSV(reviewsText)
+                const reviewsResponse = await fetch('/data/Review.json')
+                if (!reviewsResponse.ok) throw new Error('Failed to load reviews')
+                this.reviews = await reviewsResponse.json()
                 
-                const filmsResponse = await fetch('/data/Film.csv')
-                const filmsText = await filmsResponse.text()
-                this.films = this.parseCSV(filmsText)
+                const filmsResponse = await fetch('/data/Film.json')
+                if (!filmsResponse.ok) throw new Error('Failed to load films')
+                this.films = await filmsResponse.json()
                 
-                const spectatorsResponse = await fetch('/data/Spectator.csv')
-                const spectatorsText = await spectatorsResponse.text()
-                this.spectators = this.parseCSV(spectatorsText)
+                const spectatorsResponse = await fetch('/data/Spectator.json')
+                if (!spectatorsResponse.ok) throw new Error('Failed to load spectators')
+                this.spectators = await spectatorsResponse.json()
                 
             } catch (error) {
                 console.error('Error loading data:', error)
