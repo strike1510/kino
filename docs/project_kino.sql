@@ -228,6 +228,8 @@ INSERT INTO Review (Rating, Comment, user_id, film_id) VALUES
 (5, 'Cillian Murphy delivers an Oscar-worthy performance.', 10, 11),
 (4, 'The direction is phenomenal.', 11, 3);
 
+
+/*
 -- CRUD --
 
 -- CREATE
@@ -273,3 +275,4 @@ SELECT f.Title, a.Name_actor, p.Character_name
 FROM Film f
 JOIN Play p ON f.ID_film = p.ID_film
 JOIN Actor a ON p.actor_id = a.ID_actor;
+*/
