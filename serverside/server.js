@@ -35,7 +35,7 @@ app.use(session({
 const cors = require('cors');
 // app.use(cors()); // not enough!
 // "when responding to a credentialed request, server must specify a domain, and cannot use wild carding"
-app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'GET', 'POST' ] })); 
+app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'GET', 'POST', 'PUT', 'DELETE' ] })); 
 
 // setup passport = authentication
 // const auth = require("./utils/users.auth"); 
@@ -44,7 +44,7 @@ app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'G
 
 // setup additional routes
 app.use("/static", express.static(__dirname + '/static'));
-app.use("/carsapi", require("./controllers/carsapi.route"));
+app.use("/cinemaapi", require("./controllers/cinema.route"));
 
 // setup default route = 'GET' as a HTTP VERB, not as a 'getter' of some data!
 app.get('/', (request, response) => { 

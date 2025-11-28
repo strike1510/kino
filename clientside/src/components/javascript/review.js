@@ -46,21 +46,21 @@ export default {
     methods: {
         async loadData() {
             try {
-                const reviewsResponse = await fetch('/data/Review.json')
+                const reviewsResponse = await fetch('http://localhost:9000/cinemaapi/reviews')
                 if (!reviewsResponse.ok) throw new Error('Failed to load reviews')
                 this.reviews = await reviewsResponse.json()
                 
-                const filmsResponse = await fetch('/data/Film.json')
+                const filmsResponse = await fetch('http://localhost:9000/cinemaapi/films')
                 if (!filmsResponse.ok) throw new Error('Failed to load films')
                 this.films = await filmsResponse.json()
                 
-                const spectatorsResponse = await fetch('/data/Spectator.json')
+                const spectatorsResponse = await fetch('http://localhost:9000/cinemaapi/spectators')
                 if (!spectatorsResponse.ok) throw new Error('Failed to load spectators')
                 this.spectators = await spectatorsResponse.json()
                 
             } catch (error) {
                 console.error('Error loading data:', error)
-                alert('Error loading data')
+                alert('Error loading data. Make sure the backend server is running on port 9000')
             }
         },
         
@@ -109,37 +109,55 @@ export default {
             this.editingId = review.ID_review
         },
         
-        deleteReview(reviewId) {
+        async deleteReview(reviewId) {
             if (confirm('Are you sure you want to delete this review?')) {
-                this.reviews = this.reviews.filter(review => review.ID_review !== reviewId)
+                try {
+                    const response = await fetch(`http://localhost:9000/cinemaapi/reviews/${reviewId}`, {
+                        method: 'DELETE'
+                    })
+                    if (!response.ok) throw new Error('Delete failed')
+                    await this.loadData()
+                } catch (error) {
+                    console.error('Error deleting review:', error)
+                    alert('Error deleting review')
+                }
             }
         },
         
-        submitReview() {
-            if (this.isEditing) {
-                const index = this.reviews.findIndex(review => review.ID_review === this.editingId)
-                if (index !== -1) {
-                    this.reviews[index] = { 
-                        ...this.reviews[index], 
-                        ...this.formData,
-                        Rating: this.formData.Rating.toString()
-                    }
+        async submitReview() {
+            try {
+                if (this.isEditing) {
+                    const response = await fetch(`http://localhost:9000/cinemaapi/reviews/${this.editingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            Rating: this.formData.Rating,
+                            Comment: this.formData.Comment,
+                            user_id: this.formData.user_id,
+                            film_id: this.formData.film_id
+                        })
+                    })
+                    if (!response.ok) throw new Error('Update failed')
+                } else {
+                    const response = await fetch('http://localhost:9000/cinemaapi/reviews', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            Rating: this.formData.Rating,
+                            Comment: this.formData.Comment,
+                            user_id: this.formData.user_id,
+                            film_id: this.formData.film_id
+                        })
+                    })
+                    if (!response.ok) throw new Error('Create failed')
                 }
-            } else {
-                const currentIds = this.reviews.map(review => parseInt(review.ID_review)).filter(id => !isNaN(id))
-                const newId = currentIds.length > 0 ? Math.max(...currentIds) + 1 : 1
                 
-                const newReview = {
-                    ID_review: newId.toString(),
-                    ...this.formData,
-                    Rating: this.formData.Rating.toString(),
-                    Creation_date: new Date().toISOString().split('T')[0]
-                }
-                
-                this.reviews.push(newReview)
+                await this.loadData()
+                this.resetForm()
+            } catch (error) {
+                console.error('Error submitting review:', error)
+                alert('Error submitting review')
             }
-            
-            this.resetForm()
         },
         
         cancelEdit() {

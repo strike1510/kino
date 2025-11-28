@@ -102,32 +102,45 @@ export default {
     }
   },
   methods: {
+    getApiEndpoint(tableName) {
+      const endpoints = {
+        'Film': '/cinemaapi/films',
+        'Director': '/cinemaapi/directors',
+        'Actor': '/cinemaapi/actors',
+        'Spectator': '/cinemaapi/spectators',
+        'Review': '/cinemaapi/reviews',
+        'Genre': '/cinemaapi/genres'
+      }
+      return endpoints[tableName] || '/cinemaapi/films'
+    },
+    
     async loadTableData() {
       this.loading = true
       this.error = null
       
       try {
-        const response = await fetch(`/data/${this.selectedTable}.json`)
+        const apiEndpoint = this.getApiEndpoint(this.selectedTable)
+        const response = await fetch(`http://localhost:9000${apiEndpoint}`)
         
         if (!response.ok) {
-          throw new Error(`File ${this.selectedTable}.json not found`)
+          throw new Error(`API Error: ${response.status}`)
         }
         
         this.tableData = await response.json()
         this.resetForm()
         
         if (this.tableData.length === 0) {
-          this.error = 'No data found in JSON file'
+          this.error = 'No data found in database'
         }
         
-            } catch (error) {
+      } catch (error) {
         console.error('Error loading data:', error)
-        this.error = `Error: ${error.message}. Ensure the file ${this.selectedTable}.json exists in the public/data/ folder`
+        this.error = `Error: ${error.message}. Make sure the backend server is running on port 9000`
         this.tableData = []
-            } finally {
+      } finally {
         this.loading = false
-            }
-          },
+      }
+    },
 
     getInputType(column) {
       const lowerColumn = column.toLowerCase()
@@ -158,25 +171,39 @@ export default {
       this.editingId = null
     },
 
-    submitForm() {
-      if (this.isEditing) {
-        const index = this.tableData.findIndex(row => row[this.primaryKey] === this.editingId)
-        if (index !== -1) {
-          this.tableData[index] = { ...this.tableData[index], ...this.formData }
-        }
-      } else {
-        const currentIds = this.tableData
-          .map(row => parseInt(row[this.primaryKey]))
-          .filter(id => !isNaN(id))
+    async submitForm() {
+      try {
+        const apiEndpoint = this.getApiEndpoint(this.selectedTable)
         
-        const newId = currentIds.length > 0 ? Math.max(...currentIds) + 1 : 1
-        const newRow = { 
-          [this.primaryKey]: newId.toString(), 
-          ...this.formData 
+        if (this.isEditing) {
+          // UPDATE
+          const response = await fetch(`http://localhost:9000${apiEndpoint}/${this.editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.formData)
+          })
+          
+          if (!response.ok) throw new Error(`Update failed: ${response.status}`)
+          
+          await this.loadTableData()
+        } else {
+          // CREATE
+          const response = await fetch(`http://localhost:9000${apiEndpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.formData)
+          })
+          
+          if (!response.ok) throw new Error(`Create failed: ${response.status}`)
+          
+          await this.loadTableData()
         }
-        this.tableData.push(newRow)
+        
+        this.resetForm()
+      } catch (error) {
+        console.error('Submit error:', error)
+        this.error = `Error: ${error.message}`
       }
-      this.resetForm()
     },
 
     editRow(row) {
@@ -186,9 +213,21 @@ export default {
       this.editingId = row[this.primaryKey]
     },
 
-    deleteRow(id) {
+    async deleteRow(id) {
       if (confirm('Are you sure you want to delete this record?')) {
-        this.tableData = this.tableData.filter(row => row[this.primaryKey] !== id)
+        try {
+          const apiEndpoint = this.getApiEndpoint(this.selectedTable)
+          const response = await fetch(`http://localhost:9000${apiEndpoint}/${id}`, {
+            method: 'DELETE'
+          })
+          
+          if (!response.ok) throw new Error(`Delete failed: ${response.status}`)
+          
+          await this.loadTableData()
+        } catch (error) {
+          console.error('Delete error:', error)
+          this.error = `Error: ${error.message}`
+        }
       }
     },
 
