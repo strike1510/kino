@@ -17,7 +17,7 @@ app.listen(process.env.WEB_PORT, '0.0.0.0',
 
 // setup form input (create request.body from POST data or json in the http request)
 const bodyParser = require("body-parser");
-app.use(bodyParser.json(), bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({type: "text/plain"}), bodyParser.urlencoded({ extended: true }));
 
 // setup serverside session storage
 const session = require("express-session");
@@ -44,7 +44,7 @@ app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'G
 
 // setup additional routes
 app.use("/static", express.static(__dirname + '/static'));
-app.use("/carsapi", require("./controllers/carsapi.route"));
+app.use("/cinemaapi", require("./controllers/cinema.route"));
 
 // setup default route = 'GET' as a HTTP VERB, not as a 'getter' of some data!
 app.get('/', (request, response) => { 
