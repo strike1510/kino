@@ -17,7 +17,7 @@ app.listen(process.env.WEB_PORT, '0.0.0.0',
 
 // setup form input (create request.body from POST data or json in the http request)
 const bodyParser = require("body-parser");
-app.use(bodyParser.json(), bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({type: "text/plain"}), bodyParser.urlencoded({ extended: true }));
 
 // setup serverside session storage
 const session = require("express-session");
@@ -35,7 +35,7 @@ app.use(session({
 const cors = require('cors');
 // app.use(cors()); // not enough!
 // "when responding to a credentialed request, server must specify a domain, and cannot use wild carding"
-app.use(cors({ origin: "http://localhost:8081", credentials: true, methods: [ 'GET', 'POST', 'PUT', 'DELETE' ] })); 
+app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'GET', 'POST' ] })); 
 
 // setup passport = authentication
 const auth = require("./utils/users.auth"); 
@@ -44,7 +44,7 @@ app.use("/auth", require("./controllers/auth.route"));
 
 // setup additional routes
 app.use("/static", express.static(__dirname + '/static'));
-app.use("/cinemaapi", require("./controllers/cinema.route"));
+app.use("/carsapi", require("./controllers/carsapi.route"));
 
 // setup default route = 'GET' as a HTTP VERB, not as a 'getter' of some data!
 app.get('/', (request, response) => { 

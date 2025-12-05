@@ -52,67 +52,118 @@
                         <span class="date">on {{ formatDate(review.Creation_date) }}</span>
                     </div>
                 </div>
-                <div class="review-actions">
-                    <button @click="editReview(review)" class="btn-edit">Edit</button>
+                <div class="review-actions" v-if="canModifyReview(review)">
+                    <button @click="toggleEditForm(review)" class="btn-edit">Edit</button>
                     <button @click="deleteReview(review.ID_review)" class="btn-delete">Delete</button>
+                </div>
+
+                <!-- Edit form dropdown -->
+                <div v-if="isEditing && editingId === review.ID_review" class="edit-dropdown">
+                    <h3>Edit Review</h3>
+                    <p class="logged-in-info">
+                        Posting as: <strong>{{ currentUser.username }}</strong>
+                    </p>
+                    <form @submit.prevent="submitReview">
+                        <div class="form-group">
+                            <label for="edit-filmSelect">Movie:</label>
+                            <select id="edit-filmSelect" v-model="formData.film_id" required>
+                                <option value="">Select a movie</option>
+                                <option v-for="film in films" :key="film.ID_film" :value="film.ID_film">
+                                    {{ film.Title }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-rating">Rating:</label>
+                            <div class="rating-input">
+                                <span 
+                                    v-for="n in 5" 
+                                    :key="n" 
+                                    class="star" 
+                                    :class="{ active: formData.Rating >= n }"
+                                    @click="formData.Rating = n"
+                                >
+                                    ★
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-comment">Comment:</label>
+                            <textarea 
+                                id="edit-comment" 
+                                v-model="formData.Comment" 
+                                rows="4" 
+                                placeholder="Your review for the movie..."
+                                required
+                            ></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">Edit Review</button>
+                            <button type="button" @click="cancelEdit" class="btn-cancel">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <div class="review-form">
-            <h3>{{ isEditing ? 'Edit Review' : 'Add New Review' }}</h3>
-            <form @submit.prevent="submitReview">
-                <div class="form-group">
-                    <label for="filmSelect">Movie:</label>
-                    <select id="filmSelect" v-model="formData.film_id" required>
-                        <option value="">Select a movie</option>
-                        <option v-for="film in films" :key="film.ID_film" :value="film.ID_film">
-                            {{ film.Title }}
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="userSelect">User:</label>
-                    <select id="userSelect" v-model="formData.user_id" required>
-                        <option value="">Select a user</option>
-                        <option v-for="user in spectators" :key="user.ID_spectator" :value="user.ID_spectator">
-                            {{ user.Username }} ({{ user.Email }})
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <div class="rating-input">
-                        <span 
-                            v-for="n in 5" 
-                            :key="n" 
-                            class="star" 
-                            :class="{ active: formData.Rating >= n }"
-                            @click="formData.Rating = n"
-                        >
-                            ★
-                        </span>
+        <!-- Add Review Button -->
+        <div class="add-review-section" v-if="isLoggedIn()">
+            <button @click="toggleAddForm" class="btn-add-review">
+                {{ showAddForm ? '− Close Form' : '+ Add New Review' }}
+            </button>
+
+            <!-- Add form dropdown -->
+            <div v-if="showAddForm" class="add-dropdown">
+                <h3>Add New Review</h3>
+                <p class="logged-in-info">
+                    Posting as: <strong>{{ currentUser.username }}</strong>
+                </p>
+                <form @submit.prevent="submitReview">
+                    <div class="form-group">
+                        <label for="add-filmSelect">Movie:</label>
+                        <select id="add-filmSelect" v-model="formData.film_id" required>
+                            <option value="">Select a movie</option>
+                            <option v-for="film in films" :key="film.ID_film" :value="film.ID_film">
+                                {{ film.Title }}
+                            </option>
+                        </select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="comment">Comment:</label>
-                    <textarea 
-                        id="comment" 
-                        v-model="formData.Comment" 
-                        rows="4" 
-                        placeholder="Your review for the movie..."
-                        required
-                    ></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn-submit">
-                        {{ isEditing ? 'Edit Review' : 'Add Review' }}
-                    </button>
-                    <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">
-                        Cancel
-                    </button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="add-rating">Rating:</label>
+                        <div class="rating-input">
+                            <span 
+                                v-for="n in 5" 
+                                :key="n" 
+                                class="star" 
+                                :class="{ active: formData.Rating >= n }"
+                                @click="formData.Rating = n"
+                            >
+                                ★
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-comment">Comment:</label>
+                        <textarea 
+                            id="add-comment" 
+                            v-model="formData.Comment" 
+                            rows="4" 
+                            placeholder="Your review for the movie..."
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Add Review</button>
+                        <button type="button" @click="toggleAddForm" class="btn-cancel">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="login-prompt" v-else>
+            <h3>Want to add a review?</h3>
+            <p>You need to be logged in to add or edit reviews.</p>
+            <button @click="$router.push('/auth')" class="btn-login">Go to Login</button>
         </div>
     </div>
 </template>

@@ -1,5 +1,23 @@
 <template>
   <div class="hello">
+    <!-- BOUTON AUTHENTIFICATION AJOUTÉ ICI -->
+    <div class="auth-container">
+      <button 
+        v-if="!isAuthenticated" 
+        @click="goToAuth" 
+        class="auth-btn login-btn"
+      >
+        Login / Register
+      </button>
+      <div v-else class="user-info">
+        <span>Welcome, {{ userEmail }}</span>
+        <button @click="logout" class="auth-btn logout-btn">
+          Logout
+        </button>
+      </div>
+    </div>
+    <!-- FIN DU BOUTON AUTHENTIFICATION -->
+    
     <h1>DataBase Panel</h1>
     
     <div class="table-selector">

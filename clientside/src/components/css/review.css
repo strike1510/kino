@@ -246,6 +246,134 @@ button:active {
     transform: translateY(0);
 }
 
+.logged-in-info {
+    background: #e3f2fd;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #1565c0;
+    border-left: 4px solid #2196f3;
+}
+
+.logged-in-info strong {
+    color: #0d47a1;
+}
+
+/* Edit Dropdown */
+.edit-dropdown {
+    background: #f8f9fa;
+    border-top: 3px solid #28a745;
+    padding: 25px;
+    margin-top: 15px;
+    border-radius: 0 0 12px 12px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.edit-dropdown h3 {
+    color: #2c3e50;
+    margin: 0 0 20px 0;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+/* Add Review Section */
+.add-review-section {
+    margin: 30px 0;
+}
+
+.btn-add-review {
+    width: 100%;
+    padding: 18px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-add-review:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-add-review:active {
+    transform: translateY(-1px);
+}
+
+/* Add Dropdown */
+.add-dropdown {
+    background: white;
+    padding: 30px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    animation: slideDown 0.3s ease-out;
+}
+
+.add-dropdown h3 {
+    color: #2c3e50;
+    margin: 0 0 20px 0;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-prompt {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-top: 30px;
+}
+
+.login-prompt h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.login-prompt p {
+    color: #6c757d;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.btn-login {
+    background: #3498db;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
 @media (max-width: 768px) {
     .stats {
         flex-direction: column;
