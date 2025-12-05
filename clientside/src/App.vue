@@ -13,7 +13,25 @@
         <router-link to="/about">About</router-link>
         <router-link to="/review">Review</router-link>
       </div>
-      <div class="nav-spacer"></div>
+      
+      <!-- BOUTON SIMPLE -->
+      <div class="auth-section">
+        <button 
+          v-if="!isAuthenticated" 
+          @click="goToAuth" 
+          class="auth-btn login-btn"
+        >
+          Login
+        </button>
+        
+        <button 
+          v-else 
+          @click="logout" 
+          class="auth-btn logout-btn"
+        >
+          Logout
+        </button>
+      </div>
     </nav>
     
     <router-view v-if="$route.path !== '/'"/>
@@ -27,6 +45,45 @@ export default {
   name: 'App',
   components: {
     MainPage
+  },
+  data() {
+    return {
+      isAuthenticated: false,
+      userEmail: ''
+    }
+  },
+  methods: {
+    checkAuth() {
+      const session = JSON.parse(localStorage.getItem('session') || 'null');
+      
+      if (session && session.isAuthenticated) {
+        const sessionAge = Date.now() - session.timestamp;
+        if (sessionAge < 24 * 60 * 60 * 1000) {
+          this.isAuthenticated = true;
+          this.userEmail = session.email;
+        } else {
+          localStorage.removeItem('session');
+          this.isAuthenticated = false;
+          this.userEmail = '';
+        }
+      }
+    },
+    
+    goToAuth() {
+      this.$router.push('/auth');
+    },
+    
+    logout() {
+      if (confirm('Do you want to logout?')) {
+        localStorage.removeItem('session');
+        this.isAuthenticated = false;
+        this.userEmail = '';
+        this.$router.push('/');
+      }
+    }
+  },
+  mounted() {
+    this.checkAuth();
   }
 }
 </script>
@@ -46,45 +103,26 @@ export default {
 }
 
 .page-nav {
-  background: #f8f9fa;
-  padding: 15px;
+  background: #2c3e50;
+  padding: 15px 30px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #dee2e6;
-  position: relative;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .nav-logo {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.nav-spacer {
   flex: 1;
 }
 
 .logo-link {
   display: block;
-  padding: 0;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.logo-link:hover {
-  transform: scale(1.05);
-  background: none !important;
 }
 
 .kino-logo {
-  height: 40px;
+  height: 35px;
   width: auto;
   display: block;
-  transition: all 0.3s ease;
-}
-
-.kino-logo:hover {
-  filter: brightness(1.1);
+  filter: brightness(0) invert(1);
 }
 
 .nav-links {
@@ -96,65 +134,98 @@ export default {
 }
 
 .nav-links a {
-  color: #495057;
+  color: white;
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 4px;
-  transition: all 0.3s ease;
-  font-weight: 500;
+  transition: background 0.3s ease;
 }
 
 .nav-links a:hover {
-  background: #e9ecef;
-  color: #212529;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-links a.router-link-exact-active {
-  background: #007bff;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.auth-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background: white;
+  color: #2c3e50;
+}
+
+.login-btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.logout-btn {
+  background: #e74c3c;
   color: white;
 }
 
+.logout-btn:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .page-nav {
     flex-direction: column;
-    align-items: flex-start;
     gap: 15px;
-    padding: 10px 15px;
+    padding: 15px;
   }
   
   .nav-logo {
-    align-self: center;
-  }
-  
-  .kino-logo {
-    height: 35px;
+    align-self: flex-start;
   }
   
   .nav-links {
-    align-self: center;
-    flex-wrap: wrap;
+    order: 3;
+    width: 100%;
     justify-content: center;
-    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   
-  .nav-links a {
-    padding: 6px 12px;
-    font-size: 14px;
+  .auth-section {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 480px) {
-  .nav-links {
-    gap: 10px;
-  }
-  
   .nav-links a {
-    padding: 5px 10px;
-    font-size: 13px;
+    padding: 6px 12px;
+    font-size: 14px;
   }
   
-  .kino-logo {
-    height: 30px;
+  .auth-btn {
+    padding: 8px 20px;
+    font-size: 13px;
   }
 }
 </style>
