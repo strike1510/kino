@@ -1,425 +1,261 @@
 <template>
-  <div class="hello">
-    <h1>DataBase Panel</h1>
-    
-    <div class="table-selector">
-      <label for="tableSelect">Choose a table : </label>
-      <select id="tableSelect" v-model="selectedTable" @change="loadTableData">
-        <option value="Film">Films</option>
-        <option value="Director">Realisators</option>
-        <option value="Actor">Actors</option>
-        <option value="Spectator">Spectators</option>
-        <option value="Review">Rate</option>
-        <option value="Genre">Genres</option>
-      </select>
-    </div>
+  <div class="cinema-container">
+    <h1>Films</h1>
 
-    <div v-if="loading" class="message loading">Loading the datas...</div>
-    <div v-if="error" class="message error">{{ error }}</div>
+    <div v-if="loading" class="loading">Loading...</div>
+    <div v-if="error" class="error">{{ error }}</div>
 
-    <div v-if="!loading && !error" class="data-table">
-      <h2>Table: {{ selectedTable }} ({{ tableData.length }} records)</h2>
-      <div class="table-container">
+    <div v-if="!loading && !error" class="content">
+      <div v-if="isAdmin" class="add-section">
+        <button @click="toggleAddForm" class="btn-add">
+          {{ showAddForm ? '✕ Cancel' : '+ Add Film' }}
+        </button>
+      </div>
+
+      <div v-if="showAddForm && isAdmin" class="add-form-container">
+        <h3>Add New Film</h3>
+        <form @submit.prevent="addFilm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title *</label>
+              <input v-model="newFilm.Title" type="text" required />
+            </div>
+            <div class="form-group">
+              <label>Director *</label>
+              <select v-model="newFilm.director_id" required>
+                <option value="">Select a director</option>
+                <option v-for="director in directors" :key="director.ID_director" :value="director.ID_director">
+                  {{ director.Name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Synopsis</label>
+            <textarea v-model="newFilm.Synopsis" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">Add Film</button>
+            <button type="button" @click="cancelAdd" class="btn-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th v-for="column in columns" :key="column">{{ column }}</th>
-              <th>Actions</th>
+              <th>Title</th>
+              <th>Director</th>
+              <th>Synopsis</th>
+              <th v-if="isAdmin">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="row in tableData" :key="row[primaryKey]">
-              <td v-for="column in columns" :key="column">
-                {{ row[column] }}
-              </td>
-              <td class="actions">
-                <button @click="editRow(row)" class="btn-edit">Modify</button>
-                <button @click="deleteRow(row[primaryKey])" class="btn-delete">Delete</button>
-              </td>
-            </tr>
+            <template v-for="film in films" :key="film.ID_film">
+              <tr>
+                <td class="title-cell">{{ film.Title }}</td>
+                <td class="director-cell">{{ getDirectorName(film.director_id) }}</td>
+                <td class="synopsis-cell">{{ film.Synopsis || 'No synopsis available' }}</td>
+                <td v-if="isAdmin" class="actions-cell">
+                  <button @click="startEdit(film)" class="btn-modify">Modify</button>
+                  <button @click="deleteFilm(film.ID_film)" class="btn-delete">Delete</button>
+                </td>
+              </tr>
+
+              <tr v-if="editingFilm && editingFilm.ID_film === film.ID_film" class="edit-row">
+                <td :colspan="4">
+                  <div class="edit-form">
+                    <h3>Edit Film</h3>
+                    <form @submit.prevent="saveEdit">
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label>Title *</label>
+                          <input v-model="editingFilm.Title" type="text" required />
+                        </div>
+                        <div class="form-group">
+                          <label>Director *</label>
+                          <select v-model="editingFilm.director_id" required>
+                            <option value="">Select a director</option>
+                            <option v-for="director in directors" :key="director.ID_director" :value="director.ID_director">
+                              {{ director.Name }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Synopsis</label>
+                        <textarea v-model="editingFilm.Synopsis" rows="3"></textarea>
+                      </div>
+                      <div class="form-actions">
+                        <button type="submit" class="btn-submit">Save</button>
+                        <button type="button" @click="cancelEdit" class="btn-cancel">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
-    </div>
-
-    <div v-if="!loading && !error" class="form-section">
-      <h3>{{ isEditing ? 'Modify' : 'Add' }} un enregistrement</h3>
-      <form @submit.prevent="submitForm">
-        <div v-for="column in editableColumns" :key="column" class="form-group">
-          <label :for="column">{{ column }}:</label>
-          <textarea
-            v-if="getInputType(column) === 'textarea'"
-            :id="column"
-            v-model="formData[column]"
-            :required="isRequired(column)"
-            rows="4"
-          ></textarea>
-          <input
-            v-else
-            :id="column"
-            v-model="formData[column]"
-            :type="getInputType(column)"
-            :required="isRequired(column)"
-          />
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn-submit">
-            {{ isEditing ? 'Modify' : 'Add' }}
-          </button>
-          <button v-if="isEditing" type="button" @click="cancelEdit" class="btn-cancel">
-            Cancel
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CinemaDatabase',
+  name: 'Cinema',
   data() {
     return {
-      selectedTable: 'Film',
-      tableData: [],
-      formData: {},
-      isEditing: false,
-      editingId: null,
-      loading: false,
-      error: null
-    }
-  },
-  computed: {
-    columns() {
-      if (this.tableData.length === 0) return []
-      return Object.keys(this.tableData[0])
-    },
-    primaryKey() {
-      return this.columns[0]
-    },
-    editableColumns() {
-      return this.columns.filter(col => col !== this.primaryKey)
+      films: [],
+      directors: [],
+      loading: true,
+      error: null,
+      isAdmin: false,
+      editingFilm: null,
+      showAddForm: false,
+      newFilm: {
+        Title: '',
+        director_id: '',
+        Synopsis: ''
+      }
     }
   },
   methods: {
-    getApiEndpoint(tableName) {
-      const endpoints = {
-        'Film': '/cinemaapi/films',
-        'Director': '/cinemaapi/directors',
-        'Actor': '/cinemaapi/actors',
-        'Spectator': '/cinemaapi/spectators',
-        'Review': '/cinemaapi/reviews',
-        'Genre': '/cinemaapi/genres'
+    async checkAuth() {
+      try {
+        const response = await fetch('http://localhost:9000/auth/status', { credentials: 'include' })
+        if (response.ok) {
+          const data = await response.json()
+          if (data.isAuthenticated && data.user) {
+            this.isAdmin = data.user.is_admin === 1 || data.user.is_admin === true || data.user.is_admin === '1'
+          }
+        }
+      } catch (err) {
+        console.error('Auth check failed:', err)
       }
-      return endpoints[tableName] || '/cinemaapi/films'
     },
     
-    async loadTableData() {
-      this.loading = true
-      this.error = null
-      
+    async loadDirectors() {
       try {
-        const apiEndpoint = this.getApiEndpoint(this.selectedTable)
-        const response = await fetch(`http://localhost:9000${apiEndpoint}`)
-        
-        if (!response.ok) {
-          throw new Error(`API Error: ${response.status}`)
-        }
-        
-        this.tableData = await response.json()
-        this.resetForm()
-        
-        if (this.tableData.length === 0) {
-          this.error = 'No data found in database'
-        }
-        
-      } catch (error) {
-        console.error('Error loading data:', error)
-        this.error = `Error: ${error.message}. Make sure the backend server is running on port 9000`
-        this.tableData = []
+        const response = await fetch('http://localhost:9000/cinemaapi/directors')
+        if (!response.ok) throw new Error('Failed to load directors')
+        this.directors = await response.json()
+      } catch (err) {
+        console.error('Error loading directors:', err)
+      }
+    },
+    
+    async loadFilms() {
+      try {
+        const response = await fetch('http://localhost:9000/cinemaapi/films')
+        if (!response.ok) throw new Error('Failed to load films')
+        this.films = await response.json()
+      } catch (err) {
+        this.error = err.message
       } finally {
         this.loading = false
       }
     },
-
-    getInputType(column) {
-      const lowerColumn = column.toLowerCase()
-      
-      if (lowerColumn.includes('date')) return 'date'
-      if (lowerColumn.includes('email')) return 'email'
-      if (lowerColumn.includes('password')) return 'password'
-      if (lowerColumn.includes('year') || lowerColumn.includes('duration') || 
-          lowerColumn.includes('age') || lowerColumn.includes('rating') || 
-          lowerColumn.includes('id_')) return 'number'
-      if (lowerColumn.includes('synopsis') || lowerColumn.includes('comment')) return 'textarea'
-      return 'text'
+    
+    getDirectorName(directorId) {
+      const director = this.directors.find(d => d.ID_director === directorId)
+      return director ? director.Name : 'Unknown'
     },
-
-    isRequired(column) {
-      const lowerColumn = column.toLowerCase()
-      const optionalColumns = ['first_name', 'period', 'birth_date', 'nationality', 
-                              'registration_date', 'creation_date', 'average_rating']
-      return !optionalColumns.some(opt => lowerColumn.includes(opt))
+    
+    toggleAddForm() {
+      this.showAddForm = !this.showAddForm
+      if (!this.showAddForm) {
+        this.resetNewFilm()
+      }
     },
-
-    resetForm() {
-      this.formData = {}
-      this.editableColumns.forEach(col => {
-        this.formData[col] = ''
-      })
-      this.isEditing = false
-      this.editingId = null
+    
+    resetNewFilm() {
+      this.newFilm = {
+        Title: '',
+        director_id: '',
+        Synopsis: ''
+      }
     },
-
-    async submitForm() {
+    
+    async addFilm() {
       try {
-        const apiEndpoint = this.getApiEndpoint(this.selectedTable)
+        const response = await fetch('http://localhost:9000/cinemaapi/films', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(this.newFilm)
+        })
         
-        if (this.isEditing) {
-          // UPDATE
-          const response = await fetch(`http://localhost:9000${apiEndpoint}/${this.editingId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.formData)
-          })
-          
-          if (!response.ok) throw new Error(`Update failed: ${response.status}`)
-          
-          await this.loadTableData()
-        } else {
-          // CREATE
-          const response = await fetch(`http://localhost:9000${apiEndpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.formData)
-          })
-          
-          if (!response.ok) throw new Error(`Create failed: ${response.status}`)
-          
-          await this.loadTableData()
-        }
+        if (!response.ok) throw new Error('Failed to add film')
         
-        this.resetForm()
-      } catch (error) {
-        console.error('Submit error:', error)
-        this.error = `Error: ${error.message}`
+        await this.loadFilms()
+        this.resetNewFilm()
+        this.showAddForm = false
+        alert('Film added successfully!')
+      } catch (err) {
+        alert('Error: ' + err.message)
       }
     },
-
-    editRow(row) {
-      this.formData = { ...row }
-      delete this.formData[this.primaryKey]
-      this.isEditing = true
-      this.editingId = row[this.primaryKey]
+    
+    cancelAdd() {
+      this.resetNewFilm()
+      this.showAddForm = false
     },
-
-    async deleteRow(id) {
-      if (confirm('Are you sure you want to delete this record?')) {
-        try {
-          const apiEndpoint = this.getApiEndpoint(this.selectedTable)
-          const response = await fetch(`http://localhost:9000${apiEndpoint}/${id}`, {
-            method: 'DELETE'
-          })
-          
-          if (!response.ok) throw new Error(`Delete failed: ${response.status}`)
-          
-          await this.loadTableData()
-        } catch (error) {
-          console.error('Delete error:', error)
-          this.error = `Error: ${error.message}`
-        }
-      }
+    
+    startEdit(film) {
+      this.editingFilm = { ...film }
     },
-
+    
     cancelEdit() {
-      this.resetForm()
+      this.editingFilm = null
+    },
+    
+    async saveEdit() {
+      try {
+        const response = await fetch(`http://localhost:9000/cinemaapi/films/${this.editingFilm.ID_film}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(this.editingFilm)
+        })
+        
+        if (!response.ok) throw new Error('Failed to update film')
+        
+        await this.loadFilms()
+        this.editingFilm = null
+        alert('Film updated successfully!')
+      } catch (err) {
+        alert('Error: ' + err.message)
+      }
+    },
+    
+    async deleteFilm(filmId) {
+      if (!confirm('Are you sure you want to delete this film?')) return
+      
+      try {
+        const response = await fetch(`http://localhost:9000/cinemaapi/films/${filmId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        })
+        
+        if (!response.ok) throw new Error('Failed to delete film')
+        
+        await this.loadFilms()
+        alert('Film deleted successfully!')
+      } catch (err) {
+        alert('Error: ' + err.message)
+      }
     }
   },
-  mounted() {
-    this.loadTableData()
+  
+  async mounted() {
+    await this.checkAuth()
+    await this.loadDirectors()
+    await this.loadFilms()
   }
 }
 </script>
 
-<style scoped>
-.hello {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
-}
-
-.table-selector {
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-}
-
-select {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-left: 10px;
-  min-width: 200px;
-}
-
-.message {
-  padding: 15px;
-  margin: 20px 0;
-  border-radius: 5px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.loading {
-  background-color: #e3f2fd;
-  color: #1565c0;
-  border: 1px solid #bbdefb;
-}
-
-.error {
-  background-color: #ffebee;
-  color: #c62828;
-  border: 1px solid #ffcdd2;
-}
-
-.data-table {
-  margin-bottom: 30px;
-}
-
-.table-container {
-  overflow-x: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-  font-size: 14px;
-}
-
-th {
-  background-color: #2c3e50;
-  color: white;
-  font-weight: bold;
-  position: sticky;
-  top: 0;
-}
-
-tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-tr:hover {
-  background-color: #e9ecef;
-}
-
-.actions {
-  white-space: nowrap;
-}
-
-.form-section {
-  border: 1px solid #ddd;
-  padding: 25px;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-  margin-top: 30px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-.form-actions {
-  margin-top: 25px;
-  text-align: center;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 0 5px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-
-.btn-edit {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-submit {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-cancel {
-  background-color: #6c757d;
-  color: white;
-}
-
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-h1 {
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-h2 {
-  color: #34495e;
-  margin-bottom: 15px;
-}
-
-h3 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-</style>
+<style src="../css/cinema.css" scoped></style>

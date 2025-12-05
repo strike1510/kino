@@ -49,23 +49,30 @@ export default {
   data() {
     return {
       isAuthenticated: false,
-      userEmail: ''
+      currentUser: null
     }
   },
   methods: {
-    checkAuth() {
-      const session = JSON.parse(localStorage.getItem('session') || 'null');
-      
-      if (session && session.isAuthenticated) {
-        const sessionAge = Date.now() - session.timestamp;
-        if (sessionAge < 24 * 60 * 60 * 1000) {
+    async checkAuth() {
+      try {
+        const response = await fetch('http://localhost:9000/auth/status', {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.isAuthenticated) {
           this.isAuthenticated = true;
-          this.userEmail = session.email;
+          this.currentUser = data.user;
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
         } else {
-          localStorage.removeItem('session');
           this.isAuthenticated = false;
-          this.userEmail = '';
+          this.currentUser = null;
+          localStorage.removeItem('currentUser');
         }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        this.isAuthenticated = false;
+        this.currentUser = null;
       }
     },
     
@@ -73,17 +80,39 @@ export default {
       this.$router.push('/auth');
     },
     
-    logout() {
+    async logout() {
       if (confirm('Do you want to logout?')) {
-        localStorage.removeItem('session');
-        this.isAuthenticated = false;
-        this.userEmail = '';
-        this.$router.push('/');
+        try {
+          const response = await fetch('http://localhost:9000/auth/logout', {
+            credentials: 'include'
+          });
+          const data = await response.json();
+          
+          if (data.logoutResult) {
+            this.isAuthenticated = false;
+            this.currentUser = null;
+            localStorage.removeItem('currentUser');
+            this.$router.push('/');
+          }
+        } catch (error) {
+          console.error('Logout error:', error);
+          // Force logout on client side even if server fails
+          this.isAuthenticated = false;
+          this.currentUser = null;
+          localStorage.removeItem('currentUser');
+          this.$router.push('/');
+        }
       }
     }
   },
   mounted() {
     this.checkAuth();
+  },
+  watch: {
+    $route() {
+      // Re-check auth when route changes
+      this.checkAuth();
+    }
   }
 }
 </script>

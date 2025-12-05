@@ -9,6 +9,10 @@ export default {
             selectedRating: '',
             isEditing: false,
             editingId: null,
+            showAddForm: false,
+            currentUser: null,
+            currentSpectatorId: null,
+            isAdmin: false,
             formData: {
                 film_id: '',
                 user_id: '',
@@ -44,6 +48,45 @@ export default {
         }
     },
     methods: {
+        async checkAuthentication() {
+            try {
+                const response = await fetch('http://localhost:9000/auth/status', {
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                
+                if (data.isAuthenticated) {
+                    this.currentUser = data.user
+                    this.isAdmin = data.user.is_admin === 1 || data.user.is_admin === true
+                    console.log('Review - User:', this.currentUser)
+                    console.log('Review - Is Admin:', this.isAdmin)
+                    // Find the spectator ID matching this user's username
+                    await this.loadSpectators()
+                    const spectator = this.spectators.find(s => s.Username === data.user.username)
+                    if (spectator) {
+                        this.currentSpectatorId = spectator.ID_spectator
+                        this.formData.user_id = spectator.ID_spectator
+                    }
+                } else {
+                    this.currentUser = null
+                    this.currentSpectatorId = null
+                    this.isAdmin = false
+                }
+            } catch (error) {
+                console.error('Auth check error:', error)
+            }
+        },
+
+        async loadSpectators() {
+            try {
+                const spectatorsResponse = await fetch('http://localhost:9000/cinemaapi/spectators')
+                if (!spectatorsResponse.ok) throw new Error('Failed to load spectators')
+                this.spectators = await spectatorsResponse.json()
+            } catch (error) {
+                console.error('Error loading spectators:', error)
+            }
+        },
+
         async loadData() {
             try {
                 const reviewsResponse = await fetch('http://localhost:9000/cinemaapi/reviews')
@@ -54,14 +97,24 @@ export default {
                 if (!filmsResponse.ok) throw new Error('Failed to load films')
                 this.films = await filmsResponse.json()
                 
-                const spectatorsResponse = await fetch('http://localhost:9000/cinemaapi/spectators')
-                if (!spectatorsResponse.ok) throw new Error('Failed to load spectators')
-                this.spectators = await spectatorsResponse.json()
+                await this.loadSpectators()
                 
             } catch (error) {
                 console.error('Error loading data:', error)
                 alert('Error loading data. Make sure the backend server is running on port 9000')
             }
+        },
+
+        canModifyReview(review) {
+            // Admins can modify any review, regular users can only modify their own
+            if (this.isAdmin) {
+                return true
+            }
+            return this.currentSpectatorId && review.user_id == this.currentSpectatorId
+        },
+
+        isLoggedIn() {
+            return this.currentUser !== null
         },
         
         parseCSV(csvText) {
@@ -97,8 +150,54 @@ export default {
         
         filterReviews() {
         },
+
+        toggleAddForm() {
+            this.showAddForm = !this.showAddForm
+            if (this.showAddForm) {
+                // Close any open edit forms
+                this.isEditing = false
+                this.editingId = null
+                // Reset form but keep user_id
+                this.formData = {
+                    film_id: '',
+                    user_id: this.currentSpectatorId || '',
+                    Rating: 0,
+                    Comment: ''
+                }
+            } else {
+                this.resetForm()
+            }
+        },
+
+        toggleEditForm(review) {
+            if (!this.canModifyReview(review)) {
+                alert('You can only edit your own reviews!')
+                return
+            }
+
+            // Close add form if open
+            this.showAddForm = false
+
+            // Toggle edit form
+            if (this.isEditing && this.editingId === review.ID_review) {
+                this.cancelEdit()
+            } else {
+                this.formData = {
+                    film_id: review.film_id,
+                    user_id: review.user_id,
+                    Rating: parseInt(review.Rating),
+                    Comment: review.Comment
+                }
+                this.isEditing = true
+                this.editingId = review.ID_review
+            }
+        },
         
         editReview(review) {
+            if (!this.canModifyReview(review)) {
+                alert('You can only edit your own reviews!')
+                return
+            }
             this.formData = {
                 film_id: review.film_id,
                 user_id: review.user_id,
@@ -110,6 +209,12 @@ export default {
         },
         
         async deleteReview(reviewId) {
+            const review = this.reviews.find(r => r.ID_review === reviewId)
+            if (!this.canModifyReview(review)) {
+                alert('You can only delete your own reviews!')
+                return
+            }
+            
             if (confirm('Are you sure you want to delete this review?')) {
                 try {
                     const response = await fetch(`http://localhost:9000/cinemaapi/reviews/${reviewId}`, {
@@ -125,6 +230,33 @@ export default {
         },
         
         async submitReview() {
+            if (!this.isLoggedIn()) {
+                alert('You must be logged in to submit a review!')
+                this.$router.push('/auth')
+                return
+            }
+
+            if (!this.currentSpectatorId) {
+                alert('User account not found in spectators database. Please contact administrator.')
+                return
+            }
+
+            // Validation
+            if (!this.formData.film_id) {
+                alert('Please select a movie!')
+                return
+            }
+
+            if (!this.formData.Rating || this.formData.Rating === 0) {
+                alert('Please select a rating!')
+                return
+            }
+
+            if (!this.formData.Comment || this.formData.Comment.trim() === '') {
+                alert('Please write a comment!')
+                return
+            }
+
             try {
                 if (this.isEditing) {
                     const response = await fetch(`http://localhost:9000/cinemaapi/reviews/${this.editingId}`, {
@@ -133,11 +265,15 @@ export default {
                         body: JSON.stringify({
                             Rating: this.formData.Rating,
                             Comment: this.formData.Comment,
-                            user_id: this.formData.user_id,
+                            user_id: this.currentSpectatorId,
                             film_id: this.formData.film_id
                         })
                     })
-                    if (!response.ok) throw new Error('Update failed')
+                    if (!response.ok) {
+                        const errorData = await response.json()
+                        throw new Error(errorData.error || 'Update failed')
+                    }
+                    alert('Review updated successfully!')
                 } else {
                     const response = await fetch('http://localhost:9000/cinemaapi/reviews', {
                         method: 'POST',
@@ -145,18 +281,22 @@ export default {
                         body: JSON.stringify({
                             Rating: this.formData.Rating,
                             Comment: this.formData.Comment,
-                            user_id: this.formData.user_id,
+                            user_id: this.currentSpectatorId,
                             film_id: this.formData.film_id
                         })
                     })
-                    if (!response.ok) throw new Error('Create failed')
+                    if (!response.ok) {
+                        const errorData = await response.json()
+                        throw new Error(errorData.error || 'Create failed')
+                    }
+                    alert('Review added successfully!')
                 }
                 
                 await this.loadData()
                 this.resetForm()
             } catch (error) {
                 console.error('Error submitting review:', error)
-                alert('Error submitting review')
+                alert('Error submitting review: ' + error.message)
             }
         },
         
@@ -167,15 +307,17 @@ export default {
         resetForm() {
             this.formData = {
                 film_id: '',
-                user_id: '',
+                user_id: this.currentSpectatorId || '',
                 Rating: 0,
                 Comment: ''
             }
             this.isEditing = false
             this.editingId = null
+            this.showAddForm = false
         }
     },
-    mounted() {
-        this.loadData()
+    async mounted() {
+        await this.checkAuthentication()
+        await this.loadData()
     }
 }
