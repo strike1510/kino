@@ -64,85 +64,7 @@
       </form>
     </div>
 
-    <!-- Forum Register -->
-    <div v-if="activeTab === 'register'" class="auth-form">
-      <h2 class="form-title">Create Account</h2>
-      
-      <form @submit.prevent="handleRegister">
-        <div class="form-group">
-          <label for="register-email">Email</label>
-          <input
-            id="register-email"
-            v-model="registerForm.email"
-            type="email"
-            required
-            placeholder="Enter your email"
-            class="form-input"
-          />
-        </div>
 
-        <div class="form-group">
-          <label for="register-username">Username</label>
-          <input
-            id="register-username"
-            v-model="registerForm.username"
-            type="text"
-            required
-            placeholder="Choose a username"
-            class="form-input"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="register-age">Age (optional)</label>
-          <input
-            id="register-age"
-            v-model="registerForm.age"
-            type="number"
-            min="1"
-            max="150"
-            placeholder="Your age"
-            class="form-input"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="register-password">Password</label>
-          <input
-            id="register-password"
-            v-model="registerForm.password"
-            type="password"
-            required
-            placeholder="At least 8 characters"
-            class="form-input"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input
-            id="confirm-password"
-            v-model="registerForm.confirmPassword"
-            type="password"
-            required
-            placeholder="Confirm your password"
-            class="form-input"
-            :class="{ 'input-error': registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword }"
-          />
-          <div v-if="registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword" class="password-error">
-            Passwords do not match
-          </div>
-        </div>
-
-        <div v-if="registerError" class="error-message">
-          {{ registerError }}
-        </div>
-
-        <button type="submit" :disabled="loading" class="submit-btn">
-          {{ loading ? 'Creating account...' : 'Create Account' }}
-        </button>
-      </form>
-    </div>
 
     <!-- back Bouton -->
     <button @click="goBack" class="back-btn">
@@ -230,7 +152,52 @@ export default {
       }
     },
 
-    
+    async handleRegister() {
+      this.registerError = '';
+      
+      if (this.registerForm.password !== this.registerForm.confirmPassword) {
+        this.registerError = 'Passwords do not match';
+        return;
+      }
+
+      if (this.registerForm.password.length < 8) {
+        this.registerError = 'Password must be at least 8 characters';
+        return;
+      }
+
+      this.loading = true;
+
+      try {
+        const response = await fetch('http://localhost:9000/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            email: this.registerForm.email,
+            username: this.registerForm.username,
+            password: this.registerForm.password,
+            age: this.registerForm.age || null
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.registerResult) {
+          // Save user info to localStorage
+          if (data.user) {
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+          }
+          this.$router.push('/');
+        } else {
+          this.registerError = data.error || 'Registration failed';
+        }
+      } catch (error) {
+        this.registerError = 'Server error. Please try again.';
+        console.error('Registration error:', error);
+      } finally {
+        this.loading = false;
+      }
+    },
 
     goBack() {
       this.$router.push('/');
