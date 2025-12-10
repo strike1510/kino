@@ -64,7 +64,85 @@
       </form>
     </div>
 
+    <!-- Forum Register -->
+    <div v-if="activeTab === 'register'" class="auth-form">
+      <h2 class="form-title">Create Account</h2>
+      
+      <form @submit.prevent="handleRegister">
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input
+            id="register-email"
+            v-model="registerForm.email"
+            type="email"
+            required
+            placeholder="Enter your email"
+            class="form-input"
+          />
+        </div>
 
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <input
+            id="register-username"
+            v-model="registerForm.username"
+            type="text"
+            required
+            placeholder="Choose a username"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="register-age">Age (optional)</label>
+          <input
+            id="register-age"
+            v-model="registerForm.age"
+            type="number"
+            min="1"
+            max="150"
+            placeholder="Your age"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input
+            id="register-password"
+            v-model="registerForm.password"
+            type="password"
+            required
+            placeholder="At least 8 characters"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            id="confirm-password"
+            v-model="registerForm.confirmPassword"
+            type="password"
+            required
+            placeholder="Confirm your password"
+            class="form-input"
+            :class="{ 'input-error': registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword }"
+          />
+          <div v-if="registerForm.confirmPassword && registerForm.password !== registerForm.confirmPassword" class="password-error">
+            Passwords do not match
+          </div>
+        </div>
+
+        <div v-if="registerError" class="error-message">
+          {{ registerError }}
+        </div>
+
+        <button type="submit" :disabled="loading" class="submit-btn">
+          {{ loading ? 'Creating account...' : 'Create Account' }}
+        </button>
+      </form>
+    </div>
 
     <!-- back Bouton -->
     <button @click="goBack" class="back-btn">
@@ -199,9 +277,39 @@ export default {
       }
     },
 
+
     goBack() {
       this.$router.push('/');
     }
+
+    
+    
+    async deleteUser(userId) {
+  try {
+    const response = await fetch(`http://localhost:9000/auth/delete/${userId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+
+    if (data.deleteResult) {
+      alert('User account deleted successfully');
+      
+      // if admin delete self compte = déconnexion
+      if (data.selfDeleted) {
+        localStorage.removeItem('currentUser');
+        this.$router.push('/');
+      }
+
+    } else {
+      alert(data.error || 'Failed to delete user');
+    }
+  } catch (error) {
+    console.error('Delete user error:', error);
+    alert('Server error. Please try again.');
+  }
+}
   }
 };
 </script>
