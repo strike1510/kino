@@ -4,7 +4,11 @@
     padding: 40px 20px;
     text-align: center;
     justify-content: center;
-    background: #f8f9fa;
+    background: #d4dfeb;
+}
+
+body {
+    background: #b1c2dc; 
 }
 
 .main-page h1 {
@@ -66,7 +70,7 @@
 .authors {
     margin-top: 40px;
     padding-top: 30px;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #ffffff;
 }
 
 .authors p {

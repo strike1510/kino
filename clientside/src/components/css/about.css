@@ -45,7 +45,7 @@
 }
 
 .about li:before {
-    content: "✓";
+    content: "O";
     color: #42b983;
     font-weight: bold;
     position: absolute;
