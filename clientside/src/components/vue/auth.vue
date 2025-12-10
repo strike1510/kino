@@ -1,13 +1,13 @@
 <template>
   <div class="auth-container">
-    <!-- Logo et titre -->
+    <!-- Logo and title -->
     <div class="auth-header">
       <img src="@/assets/home_logo.png" alt="Kino" class="auth-logo" />
       <h1 class="auth-title">Kino Database</h1>
       <p class="auth-subtitle">Manage your cinema database</p>
     </div>
 
-    <!-- Onglets -->
+    <!-- windows -->
     <div class="auth-tabs">
       <button
         @click="activeTab = 'login'"
@@ -25,7 +25,7 @@
       </button>
     </div>
 
-    <!-- Formulaire Login -->
+    <!-- Forum Login -->
     <div v-if="activeTab === 'login'" class="auth-form">
       <h2 class="form-title">Welcome Back</h2>
       
@@ -64,7 +64,7 @@
       </form>
     </div>
 
-    <!-- Formulaire Register -->
+    <!-- Forum Register -->
     <div v-if="activeTab === 'register'" class="auth-form">
       <h2 class="form-title">Create Account</h2>
       
@@ -144,7 +144,7 @@
       </form>
     </div>
 
-    <!-- Bouton retour -->
+    <!-- back Bouton -->
     <button @click="goBack" class="back-btn">
       ← Back to Home
     </button>
@@ -230,52 +230,7 @@ export default {
       }
     },
 
-    async handleRegister() {
-      this.registerError = '';
-      
-      if (this.registerForm.password !== this.registerForm.confirmPassword) {
-        this.registerError = 'Passwords do not match';
-        return;
-      }
-
-      if (this.registerForm.password.length < 8) {
-        this.registerError = 'Password must be at least 8 characters';
-        return;
-      }
-
-      this.loading = true;
-
-      try {
-        const response = await fetch('http://localhost:9000/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            email: this.registerForm.email,
-            username: this.registerForm.username,
-            password: this.registerForm.password,
-            age: this.registerForm.age || null
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.registerResult) {
-          // Save user info to localStorage
-          if (data.user) {
-            localStorage.setItem('currentUser', JSON.stringify(data.user));
-          }
-          this.$router.push('/');
-        } else {
-          this.registerError = data.error || 'Registration failed';
-        }
-      } catch (error) {
-        this.registerError = 'Server error. Please try again.';
-        console.error('Registration error:', error);
-      } finally {
-        this.loading = false;
-      }
-    },
+    
 
     goBack() {
       this.$router.push('/');
