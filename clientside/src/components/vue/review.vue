@@ -160,11 +160,7 @@
             </div>
         </div>
 
-        <div class="login-prompt" v-else>
-            <h3>Want to add a review?</h3>
-            <p>You need to be logged in to add or edit reviews.</p>
-            <button @click="$router.push('/auth')" class="btn-login">Go to Login</button>
-        </div>
+        
     </div>
 </template>
 
