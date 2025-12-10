@@ -146,7 +146,7 @@
 
     <!-- back Bouton -->
     <button @click="goBack" class="back-btn">
-      ← Back to Home
+      <= Back to Home
     </button>
   </div>
 </template>
@@ -284,32 +284,7 @@ export default {
 
     
     
-    async deleteUser(userId) {
-  try {
-    const response = await fetch(`http://localhost:9000/auth/delete/${userId}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    });
-
-    const data = await response.json();
-
-    if (data.deleteResult) {
-      alert('User account deleted successfully');
-      
-      // if admin delete self compte = déconnexion
-      if (data.selfDeleted) {
-        localStorage.removeItem('currentUser');
-        this.$router.push('/');
-      }
-
-    } else {
-      alert(data.error || 'Failed to delete user');
-    }
-  } catch (error) {
-    console.error('Delete user error:', error);
-    alert('Server error. Please try again.');
-  }
-}
+    
   }
 };
 </script>
