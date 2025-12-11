@@ -252,5 +252,31 @@ module.exports = {
             console.log(err);
             throw err;
         }
+    },
+
+    // Play (Film-Actor relationships)
+    async getAllPlay() {
+        try {
+            let sql = "SELECT * FROM Play";
+            const [rows] = await pool.execute(sql);
+            return rows;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    },
+
+    // Reviews
+    async getAverageRatings() {
+        try {
+            let sql = `SELECT film_id, AVG(Rating) as average_rating, COUNT(*) as review_count 
+                       FROM Review 
+                       GROUP BY film_id`;
+            const [rows] = await pool.execute(sql);
+            return rows;
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
     }
 };
