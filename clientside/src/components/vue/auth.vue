@@ -3,8 +3,8 @@
     <!-- Logo and title -->
     <div class="auth-header">
       <img src="@/assets/home_logo.png" alt="Kino" class="auth-logo" />
-      <h1 class="auth-title">Kino Database</h1>
-      <p class="auth-subtitle">Manage your cinema database</p>
+      <h1 class="auth-title">Kino</h1>
+      <p class="auth-subtitle">Write reviews about your favorite movies</p>
     </div>
 
     <!-- windows -->
