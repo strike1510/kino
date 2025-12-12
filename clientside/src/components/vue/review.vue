@@ -1,6 +1,6 @@
 <template>
     <div class="review-page">
-        <h1>Review Management</h1>
+        <h1>Review</h1>
         
         <div class="stats">
             <div class="stat-card">
@@ -148,7 +148,7 @@
                             id="add-comment" 
                             v-model="formData.Comment" 
                             rows="4" 
-                            placeholder="Your review for the movie..."
+                            placeholder="Your review for the movie : "
                             required
                         ></textarea>
                     </div>
@@ -159,12 +159,12 @@
                 </form>
             </div>
         </div>
-
         <div class="login-prompt" v-else>
             <h3>Want to add a review?</h3>
             <p>You need to be logged in to add or edit reviews.</p>
             <button @click="$router.push('/auth')" class="btn-login">Go to Login</button>
         </div>
+        
     </div>
 </template>
 
