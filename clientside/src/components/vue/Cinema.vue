@@ -49,7 +49,7 @@
               <select v-model="newFilm.director_id" required>
                 <option value="">Select a director</option>
                 <option v-for="director in directors" :key="director.ID_director" :value="director.ID_director">
-                  {{ director.Name }}
+                  {{ director.First_name_director }} {{ director.Name_director }}
                 </option>
               </select>
             </div>
@@ -115,7 +115,7 @@
                               <select v-model="editingFilm.director_id" required>
                                 <option value="">Select a director</option>
                                 <option v-for="director in directors" :key="director.ID_director" :value="director.ID_director">
-                                  {{ director.Name }}
+                                  {{ director.First_name_director }} {{ director.Name_director }}
                                 </option>
                               </select>
                             </div>
@@ -166,7 +166,7 @@
                             <select v-model="editingFilm.director_id" required>
                               <option value="">Select a director</option>
                               <option v-for="director in directors" :key="director.ID_director" :value="director.ID_director">
-                                {{ director.Name }}
+                                {{ director.First_name_director }} {{ director.Name_director }}
                               </option>
                             </select>
                           </div>
