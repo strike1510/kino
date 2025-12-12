@@ -225,4 +225,24 @@ router.delete('/genres/:id', async (req, res) => {
     }
 });
 
+// Play (Film-Actor relationships) routes
+router.get('/play', async (req, res) => {
+    try {
+        const play = await cinemaRepo.getAllPlay();
+        res.json(play);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Reviews routes
+router.get('/reviews/average', async (req, res) => {
+    try {
+        const ratings = await cinemaRepo.getAverageRatings();
+        res.json(ratings);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

@@ -1,6 +1,6 @@
 <template>
     <div class="review-page">
-        <h1>Review Management</h1>
+        <h1>Review</h1>
         
         <div class="stats">
             <div class="stat-card">
@@ -148,7 +148,7 @@
                             id="add-comment" 
                             v-model="formData.Comment" 
                             rows="4" 
-                            placeholder="Your review for the movie..."
+                            placeholder="Your review for the movie : "
                             required
                         ></textarea>
                     </div>

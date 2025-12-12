@@ -45,12 +45,12 @@
 }
 
 .about li:before {
-    content: "✓";
-    color: #42b983;
+    content: "OK";
+    color: #4ac58d;
     font-weight: bold;
     position: absolute;
     left: 0;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
 }
 
 .about li:hover {

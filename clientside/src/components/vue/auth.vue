@@ -1,13 +1,13 @@
 <template>
   <div class="auth-container">
-    <!-- Logo et titre -->
+    <!-- Logo and title -->
     <div class="auth-header">
       <img src="@/assets/home_logo.png" alt="Kino" class="auth-logo" />
-      <h1 class="auth-title">Kino Database</h1>
-      <p class="auth-subtitle">Manage your cinema database</p>
+      <h1 class="auth-title">Kino</h1>
+      <p class="auth-subtitle">Write reviews about your favorite movies</p>
     </div>
 
-    <!-- Onglets -->
+    <!-- windows -->
     <div class="auth-tabs">
       <button
         @click="activeTab = 'login'"
@@ -25,7 +25,7 @@
       </button>
     </div>
 
-    <!-- Formulaire Login -->
+    <!-- Forum Login -->
     <div v-if="activeTab === 'login'" class="auth-form">
       <h2 class="form-title">Welcome Back</h2>
       
@@ -64,7 +64,7 @@
       </form>
     </div>
 
-    <!-- Formulaire Register -->
+    <!-- Forum Register -->
     <div v-if="activeTab === 'register'" class="auth-form">
       <h2 class="form-title">Create Account</h2>
       
@@ -144,9 +144,9 @@
       </form>
     </div>
 
-    <!-- Bouton retour -->
+    <!-- back Bouton -->
     <button @click="goBack" class="back-btn">
-      ← Back to Home
+      <= Back to Home
     </button>
   </div>
 </template>
@@ -277,9 +277,14 @@ export default {
       }
     },
 
+
     goBack() {
       this.$router.push('/');
     }
+
+    
+    
+    
   }
 };
 </script>

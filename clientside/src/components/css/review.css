@@ -2,9 +2,9 @@
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    background: #f8f9fa;
-    min-height: 100vh;
+    background: #c4ddf5;
 }
+
 
 .review-page h1 {
     color: #2c3e50;
@@ -30,13 +30,6 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.stat-card h3 {
-    margin: 0 0 15px 0;
-    color: #6c757d;
-    font-size: 14px;
-    text-transform: uppercase;
-}
-
 .stat-number {
     font-size: 2.5rem;
     font-weight: bold;
@@ -51,7 +44,7 @@
     padding: 25px;
     background: white;
     border-radius: 12px;
-    border: 2px solid #e9ecef;
+    
 }
 
 .filter-group {
@@ -68,7 +61,6 @@
 
 select {
     padding: 12px;
-    border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
 }
@@ -79,7 +71,6 @@ select {
 
 .review-card {
     background: white;
-    border: 2px solid #e9ecef;
     border-radius: 12px;
     padding: 25px;
     margin-bottom: 20px;
@@ -113,7 +104,7 @@ select {
 
 .stars {
     color: #ffc107;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .rating-number {
@@ -128,7 +119,7 @@ select {
 .comment {
     font-style: italic;
     color: #495057;
-    line-height: 1.6;
+    
     margin-bottom: 15px;
     font-size: 1.1rem;
 }
@@ -143,21 +134,6 @@ select {
 .review-actions {
     display: flex;
     gap: 10px;
-}
-
-.review-form {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    border: 2px solid #e9ecef;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.review-form h3 {
-    color: #2c3e50;
-    margin-bottom: 25px;
-    font-size: 1.5rem;
-    text-align: center;
 }
 
 .form-group {
@@ -211,29 +187,28 @@ button {
     padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
     font-size: 16px;
     transition: all 0.3s;
     font-weight: 600;
 }
 
 .btn-edit {
-    background: linear-gradient(135deg, #28a745, #20c997);
+    background: #57b56d;
     color: white;
 }
 
 .btn-delete {
-    background: linear-gradient(135deg, #dc3545, #c82333);
+    background: #dc3545;
     color: white;
 }
 
 .btn-submit {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: #66ccca;
     color: white;
 }
 
 .btn-cancel {
-    background: linear-gradient(135deg, #6c757d, #545b62);
+    background: #6c757d;
     color: white;
 }
 
@@ -253,7 +228,6 @@ button:active {
     margin-bottom: 20px;
     text-align: center;
     color: #1565c0;
-    border-left: 4px solid #2196f3;
 }
 
 .logged-in-info strong {
@@ -314,7 +288,6 @@ button:active {
     margin-top: 20px;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    animation: slideDown 0.3s ease-out;
 }
 
 .add-dropdown h3 {
@@ -324,30 +297,19 @@ button:active {
     text-align: center;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .login-prompt {
     background: white;
     padding: 40px;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin-top: 30px;
 }
 
 .login-prompt h3 {
     color: #2c3e50;
     margin-bottom: 15px;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
 }
 
 .login-prompt p {
@@ -357,21 +319,16 @@ button:active {
 }
 
 .btn-login {
-    background: #3498db;
+    background: #758894;
     color: white;
     padding: 14px 32px;
-    border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
 }
 
 .btn-login:hover {
-    background: #2980b9;
+    background: #20cfb5;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    box-shadow: rgba(52, 152, 219, 0.3);
 }
 
 @media (max-width: 768px) {
